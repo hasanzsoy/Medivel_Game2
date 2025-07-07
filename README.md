@@ -21,8 +21,25 @@ Takım Üyeleri
 - Oyunun temel mekanikleri **Unity** ile geliştirilecektir.  
 
 **Sprint İçinde Tahmin Edilen Tamamlanacak Puan:** 90 Puan  
+Sprint 1 Task Listesi ve Puan Dağılımı
 
-**Puan Tahmin Mantığı:** Proje boyunca tamamlanması gereken toplam 300 puan bulunmaktadır. Sprintler, zorluk seviyelerine göre puanlandırılmış ve bu puanlar sprintlere dağıtılmıştır.  
+| Task (Görev)                             | Açıklama                                                                 | Puan |
+|------------------------------------------|--------------------------------------------------------------------------|------|
+| Proje başlangıç yapısı oluşturuldu       | Unity projesi açıldı, temel klasör yapısı ve sahne düzeni hazırlandı     | 10   |
+| Karakter modeli eklendi                  | Ana karakter modeli projeye eklendi                                      | 10   |
+| Karakterin yürüme animasyonu eklendi     | Karakterin düz zeminde yürüme hareketi test edilerek uygulandı           | 10   |
+| Karakterin koşma ve zıplama animasyonları| Koşma ve zıplama animasyonları başarıyla entegre edildi                  | 15   |
+| Harita (Map) temel yapısı oluşturuldu    | Birden fazla platform içeren örnek harita sahnesi tasarlandı             | 15   |
+| Kamera takibi ve kontrol ayarlandı       | Kamera, karakteri takip edecek şekilde ayarlandı                         | 10   |
+| Kullanıcı arayüzü (UI) temel ekranları tasarlandı | Ana menü ve oyun içi temel UI tasarlandı                         | 10   |
+| Oyun mekaniği iskeleti kuruldu           | Oyun başladığında karakter hareketi ve sahne geçişi test edildi          | 10   |
+| **Toplam**                               |                                                                          | **90** |
+
+**Puan Tahmin Mantığı:** Proje boyunca tamamlanması gereken toplam 300 puan bulunmaktadır. Sprintler, zorluk seviyelerine göre puanlandırılmış ve bu puanlar sprintlere dağıtılmıştır.Sprint puanları
+1.Sprint:90 puan 
+2.Sprint:100 puan
+3.Sprint: 110 puan
+olarak öngörülmüştür.
 
 **Daily Scrum:** Takımımızın toplantıları, Slack ve WhatsApp üzerinden yapılmaktadır.  
 Toplantı sırasında alınan ekran görüntüleri ve örnek mesajlaşmalar paylaşılmıştır.
