@@ -35,10 +35,10 @@ Sprint 1 Task Listesi ve Puan Dağılımı
 | Oyun mekaniği iskeleti kuruldu           | Oyun başladığında karakter hareketi ve sahne geçişi test edildi          | 10   |
 | **Toplam**                               |                                                                          | **90** |
 
-**Puan Tahmin Mantığı:** Proje boyunca tamamlanması gereken toplam 300 puan bulunmaktadır. Sprintler, zorluk seviyelerine göre puanlandırılmış ve bu puanlar sprintlere dağıtılmıştır.Sprint puanları
-1.Sprint:90 puan 
-2.Sprint:100 puan
-3.Sprint: 110 puan
+**Puan Tahmin Mantığı:** Proje boyunca tamamlanması gereken toplam 300 puan bulunmaktadır. Sprintler, zorluk seviyelerine göre puanlandırılmış ve bu puanlar sprintlere dağıtılmıştır.Sprint puanları <br>
+1.Sprint:90 puan <br>
+2.Sprint:100 puan<br>
+3.Sprint: 110 puan <br>
 olarak öngörülmüştür.
 
 **Daily Scrum:** Takımımızın toplantıları, Slack ve WhatsApp üzerinden yapılmaktadır.  
