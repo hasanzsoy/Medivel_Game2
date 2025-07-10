@@ -81,7 +81,8 @@ public class PlayerController : MonoBehaviour
     private bool _hasAnimator;
 
 
-    // ... (önceki kodlar ayný)
+    PlayerAttack _playerAttack;
+
 
     void Awake()
     {
@@ -89,6 +90,7 @@ public class PlayerController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _hasAnimator = TryGetComponent(out _animator);
         _playerInput = GetComponent<PlayerInput>();
+        _playerAttack = GetComponentInChildren<PlayerAttack>();
 
         // Find main camera
         if (_mainCamera == null)
@@ -462,6 +464,32 @@ public class PlayerController : MonoBehaviour
             {
                 _debugStatus = message;
             }
+        }
+    }
+
+    // Animation Event fonksiyonlarý - PUBLIC olmalý
+    public void EnableHitbox()
+    {
+        if (_playerAttack != null)
+        {
+            _playerAttack.EnableAttackCollider();
+            Debug.Log("[PlayerController] EnableHitbox çaðrýldý - Attack collider aktif edildi");
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerController] EnableHitbox çaðrýldý ama _playerAttack null!");
+        }
+    }
+    public void DisableHitbox()
+    {
+        if (_playerAttack != null)
+        {
+            _playerAttack.DisableAttackCollider();
+            Debug.Log("[PlayerController] DisableHitbox çaðrýldý - Attack collider deaktif edildi");
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerController] DisableHitbox çaðrýldý ama _playerAttack null!");
         }
     }
 
