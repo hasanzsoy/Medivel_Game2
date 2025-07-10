@@ -20,7 +20,7 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    importAnimatedCustomProperties: 0
+    importAnimatedCustomProperties: 1
     importConstraints: 0
     animationCompression: 3
     animationRotationError: 0.5
@@ -34,7 +34,7 @@ ModelImporter:
       name: Attack1
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 0
+      firstFrame: 0.029999997
       lastFrame: 90
       wrapMode: 0
       orientationOffsetY: 0
@@ -55,13 +55,6 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0
-        functionName: EnableAttackCollider
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
       - time: 1
         functionName: DisableAttackCollider
         data: 

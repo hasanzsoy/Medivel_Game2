@@ -2,18 +2,22 @@ using UnityEngine;
 
 public class EnemyHealty : MonoBehaviour
 {
-    public int maxHealth = 100;
-    [SerializeField] private int currentHealth;
+    [SerializeField] private int maxHealth = 100;
+    private int currentHealth;
 
-    public void Start()
+    private void Start()
     {
         currentHealth = maxHealth;
+        Debug.Log($"[EnemyHealty] Baþlangýç caný: {currentHealth}");
     }
 
     public void TakeDamage(int damage)
     {
+        int oldHealth = currentHealth;
         currentHealth -= damage;
-        Debug.Log($"Enemy took {damage} damage. Current Health: {currentHealth}");
+        currentHealth = Mathf.Max(currentHealth, 0);
+
+        Debug.Log($"[EnemyHealty] {damage} damage alýndý. Önceki: {oldHealth}, Þimdi: {currentHealth}");
 
         if (currentHealth <= 0)
         {
@@ -23,9 +27,7 @@ public class EnemyHealty : MonoBehaviour
 
     public void Die()
     {
-        Debug.Log("Enemy died");
-        
+        Debug.Log("[EnemyHealty] Enemy öldü, obje yok ediliyor.");
         Destroy(gameObject);
     }
-
 }

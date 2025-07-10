@@ -5,34 +5,62 @@ public class PlayerAttack : MonoBehaviour
     public int attackDamage = 20;
     public Collider attackCollider;
 
-    public void Start()
+    private void Start()
     {
-        attackCollider.enabled = false;
+        if (attackCollider == null)
+        {
+            Debug.LogWarning("[PlayerAttack] attackCollider atanmamýþ!");
+        }
+        else
+        {
+            attackCollider.enabled = false;
+        }
+        Debug.Log("[PlayerAttack] Start çaðrýldý.");
     }
 
     public void EnableAttackCollider()
     {
-        attackCollider.enabled = true;
+        if (attackCollider != null)
+        {
+            attackCollider.enabled = true;
+            Debug.Log("[PlayerAttack] Attack collider ENABLED.");
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerAttack] EnableAttackCollider çaðrýldý ama attackCollider yok!");
+        }
     }
 
     public void DisableAttackCollider()
     {
-        attackCollider.enabled = false;
+        if (attackCollider != null)
+        {
+            attackCollider.enabled = false;
+            Debug.Log("[PlayerAttack] Attack collider DISABLED.");
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerAttack] DisableAttackCollider çaðrýldý ama attackCollider yok!");
+        }
     }
 
-    public void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
+        Debug.Log($"[PlayerAttack] OnTriggerEnter: {other.name} tag: {other.tag}");
+
         if (other.CompareTag("Enemy"))
         {
             EnemyHealty enemyHealth = other.GetComponent<EnemyHealty>();
             if (enemyHealth != null)
             {
+                Debug.Log($"[PlayerAttack] EnemyHealty bulundu, {attackDamage} damage veriliyor.");
                 enemyHealth.TakeDamage(attackDamage);
             }
-
-            Debug.Log("Triggered with: " + other.name);
+            else
+            {
+                Debug.LogWarning("[PlayerAttack] Enemy tagli objede EnemyHealty componenti yok!");
+            }
         }
     }
-
 }
 

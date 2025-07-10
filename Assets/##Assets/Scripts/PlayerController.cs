@@ -80,6 +80,9 @@ public class PlayerController : MonoBehaviour
     private const float _threshold = 0.01f;
     private bool _hasAnimator;
 
+
+    // ... (önceki kodlar ayný)
+
     void Awake()
     {
         // Get components
@@ -94,18 +97,18 @@ public class PlayerController : MonoBehaviour
         }
 
         // Debug component check
-        LogDebug("=== COMPONENT CHECK ===");
-        LogDebug($"CharacterController: {_controller != null}");
-        LogDebug($"Animator: {_hasAnimator}");
-        LogDebug($"PlayerInput: {_playerInput != null}");
-        LogDebug($"Main Camera: {_mainCamera != null}");
+        // LogDebug("=== COMPONENT CHECK ===");
+        // LogDebug($"CharacterController: {_controller != null}");
+        // LogDebug($"Animator: {_hasAnimator}");
+        // LogDebug($"PlayerInput: {_playerInput != null}");
+        // LogDebug($"Main Camera: {_mainCamera != null}");
 
         // PlayerInput detailed check
         if (_playerInput != null)
         {
-            LogDebug($"PlayerInput Behavior: {_playerInput.notificationBehavior}");
-            LogDebug($"PlayerInput Actions: {_playerInput.actions != null}");
-            LogDebug($"PlayerInput Current Action Map: {_playerInput.currentActionMap?.name}");
+            // LogDebug($"PlayerInput Behavior: {_playerInput.notificationBehavior}");
+            // LogDebug($"PlayerInput Actions: {_playerInput.actions != null}");
+            // LogDebug($"PlayerInput Current Action Map: {_playerInput.currentActionMap?.name}");
         }
 
         _debugStatus = "Components loaded";
@@ -113,7 +116,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        LogDebug("=== START METHOD ===");
+        // LogDebug("=== START METHOD ===");
 
         AssignAnimationIDs();
 
@@ -128,7 +131,7 @@ public class PlayerController : MonoBehaviour
         TestInputSystem();
 
         _debugStatus = "Initialization complete";
-        LogDebug("=== INITIALIZATION COMPLETE ===");
+        // LogDebug("=== INITIALIZATION COMPLETE ===");
     }
 
     void Update()
@@ -138,7 +141,7 @@ public class PlayerController : MonoBehaviour
         // Debug input every 60 frames to avoid spam
         if (Time.frameCount % 60 == 0 && showDebugInfo)
         {
-            LogDebug($"Frame {Time.frameCount}: Move={_moveInput}, Sprint={_sprintInput}, Jump={_jumpInput}, InputWorking={_inputSystemWorking}");
+            // LogDebug($"Frame {Time.frameCount}: Move={_moveInput}, Sprint={_sprintInput}, Jump={_jumpInput}, InputWorking={_inputSystemWorking}");
         }
 
         JumpAndGravity();
@@ -151,27 +154,27 @@ public class PlayerController : MonoBehaviour
 
     private void TestInputSystem()
     {
-        LogDebug("=== INPUT SYSTEM TEST ===");
+        // LogDebug("=== INPUT SYSTEM TEST ===");
 
         if (_playerInput == null)
         {
-            LogDebug("ERROR: PlayerInput is null!");
+            // LogDebug("ERROR: PlayerInput is null!");
             return;
         }
 
         if (_playerInput.actions == null)
         {
-            LogDebug("ERROR: PlayerInput actions is null!");
+            // LogDebug("ERROR: PlayerInput actions is null!");
             return;
         }
 
-        LogDebug($"Input Actions Asset: {_playerInput.actions.name}");
-        LogDebug($"Current Action Map: {_playerInput.currentActionMap?.name}");
+        // LogDebug($"Input Actions Asset: {_playerInput.actions.name}");
+        // LogDebug($"Current Action Map: {_playerInput.currentActionMap?.name}");
 
         // List all actions
         foreach (var action in _playerInput.actions)
         {
-            LogDebug($"Action: {action.name}, Enabled: {action.enabled}, Bindings: {action.bindings.Count}");
+            // LogDebug($"Action: {action.name}, Enabled: {action.enabled}, Bindings: {action.bindings.Count}");
         }
     }
 
@@ -186,7 +189,7 @@ public class PlayerController : MonoBehaviour
         _animIDBlock = Animator.StringToHash("Block");
         _animIDDeath = Animator.StringToHash("Death");
 
-        LogDebug($"Animation IDs assigned. Speed hash: {_animIDSpeed}");
+        // LogDebug($"Animation IDs assigned. Speed hash: {_animIDSpeed}");
     }
 
     private void GroundedCheck()
@@ -332,7 +335,7 @@ public class PlayerController : MonoBehaviour
         _attackInput = false;
     }
 
-    // Bu fonksiyonu Attack1 ve Attack2 animasyonlarýnýn sonuna Animation Event olarak ekleyin
+    //Attack1 ve Attack2 animasyonlarýnýn sonuna Animation Event
     public void OnAttackAnimationEnd()
     {
         if (_attackComboCounter == 1)
@@ -387,30 +390,31 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Unity Events Input Methods
+    // ... (diðer kodlar ayný)
+
     public void OnMove(InputAction.CallbackContext context)
     {
         _moveInput = context.ReadValue<Vector2>();
         _inputSystemWorking = true;
-        LogDebug($"OnMove called: {_moveInput}, Phase: {context.phase}");
+        // LogDebug($"OnMove called: {_moveInput}, Phase: {context.phase}");
     }
 
     public void OnLook(InputAction.CallbackContext context)
     {
         _lookInput = context.ReadValue<Vector2>();
-        LogDebug($"OnLook called: {_lookInput}, Phase: {context.phase}");
+        // LogDebug($"OnLook called: {_lookInput}, Phase: {context.phase}");
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
         _jumpInput = context.ReadValueAsButton();
-        LogDebug($"OnJump called: {_jumpInput}, Phase: {context.phase}");
+        // LogDebug($"OnJump called: {_jumpInput}, Phase: {context.phase}");
     }
 
     public void OnSprint(InputAction.CallbackContext context)
     {
         _sprintInput = context.ReadValueAsButton();
-        LogDebug($"OnSprint called: {_sprintInput}, Phase: {context.phase}");
+        // LogDebug($"OnSprint called: {_sprintInput}, Phase: {context.phase}");
     }
 
     // Unity Events Input Methods
@@ -419,7 +423,7 @@ public class PlayerController : MonoBehaviour
         if (context.performed)
         {
             _attackInput = true;
-            LogDebug($"OnAttack called, Phase: {context.phase}");
+            // LogDebug($"OnAttack called, Phase: {context.phase}");
         }
     }
 
@@ -428,14 +432,14 @@ public class PlayerController : MonoBehaviour
         if (context.performed)
         {
             _spinAttackInput = true;
-            LogDebug($"OnSpinAttack called, Phase: {context.phase}");
+            // LogDebug($"OnSpinAttack called, Phase: {context.phase}");
         }
     }
 
     public void OnBlock(InputAction.CallbackContext context)
     {
         _blockInput = context.ReadValueAsButton();
-        LogDebug($"OnBlock called: {_blockInput}, Phase: {context.phase}");
+        // LogDebug($"OnBlock called: {_blockInput}, Phase: {context.phase}");
     }
 
     public void OnDeath(InputAction.CallbackContext context)
@@ -443,7 +447,7 @@ public class PlayerController : MonoBehaviour
         if (context.performed)
         {
             _deathInput = true;
-            LogDebug($"OnDeath called, Phase: {context.phase}");
+            // LogDebug($"OnDeath called, Phase: {context.phase}");
         }
     }
 
@@ -452,7 +456,7 @@ public class PlayerController : MonoBehaviour
     {
         if (showDebugInfo)
         {
-            Debug.Log($"[PlayerController] {message}");
+            // Debug.Log($"[PlayerController] {message}");
 
             if (forceDebugToScreen)
             {
