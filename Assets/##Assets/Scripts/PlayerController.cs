@@ -207,8 +207,8 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        //Move sýrasýnda saldýrabilir
-        //if (_isAttacking || _isBlocking) return;
+        //Move sýrasýnda saldýramaz
+        if (_isAttacking || _isBlocking) return;
 
         float targetSpeed = _moveInput.magnitude > 0.02f ?
                            (_sprintInput ? sprintSpeed : moveSpeed) : 0.0f;
@@ -301,11 +301,6 @@ public class PlayerController : MonoBehaviour
 
     private void HandleCombat()
     {
-        if (Time.time - _lastAttackTime > attackComboResetTime)
-        {
-            _attackComboCounter = 0;
-        }
-
         // Sadece saldýrý baþlatma (ilk týklama veya kombo sýrasý)
         if (_attackInput && grounded && !_isAttacking && !_isBlocking)
         {
@@ -317,22 +312,25 @@ public class PlayerController : MonoBehaviour
             PerformSpinAttack();
         }
 
-        if (_hasAnimator)
-        {
-            AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-            _isAttacking = stateInfo.IsName("Attack1") || stateInfo.IsName("Attack2") || stateInfo.IsName("SpinAttack");
-        }
+        // _isAttacking sadece trigger verildikten sonra true olmalý
+        // Animasyon event ile _isAttacking = false yapýlmalý
     }
 
     private void StartAttack()
     {
-        // Sadece ilk saldýrý baþlatýlýr, kombo ilerlemesi animasyon sonunda olur
         if (_attackComboCounter == 0)
         {
             _attackComboCounter = 1;
-            _lastAttackTime = Time.time;
+            _isAttacking = true; // Saldýrý baþlatýldý
             if (_hasAnimator)
                 _animator.SetTrigger(_animIDAttack1);
+        }
+        else if (_attackComboCounter == 1)
+        {
+            _attackComboCounter = 2;
+            _isAttacking = true;
+            if (_hasAnimator)
+                _animator.SetTrigger(_animIDAttack2);
         }
         _attackInput = false;
     }
@@ -342,17 +340,27 @@ public class PlayerController : MonoBehaviour
     {
         if (_attackComboCounter == 1)
         {
-            // Eðer oyuncu saldýrý tuþuna basýlý tutuyorsa veya baþka bir koþul varsa Attack2'ye geç
-            _attackComboCounter = 2;
-            _lastAttackTime = Time.time;
-            if (_hasAnimator)
-                _animator.SetTrigger(_animIDAttack2);
+            // Sadece kullanýcý ikinci kez týklarsa Attack2 tetiklenmeli
+            if (_attackInput)
+            {
+                _attackComboCounter = 2;
+                _isAttacking = false;
+                if (_hasAnimator)
+                    _animator.SetTrigger(_animIDAttack2);
+            }
+            else
+            {
+                // Kombo bitmez, bekler
+                _attackComboCounter = 0;
+                _isAttacking = false;
+            }
         }
         else if (_attackComboCounter == 2)
         {
-            // Kombo bitti, baþa dön
             _attackComboCounter = 0;
+            _isAttacking = false;
         }
+        _attackInput = false; // inputu sýfýrla
     }
 
     private void PerformSpinAttack()
@@ -360,8 +368,13 @@ public class PlayerController : MonoBehaviour
         if (_hasAnimator)
         {
             _animator.SetTrigger(_animIDSpinAttack);
+            _isAttacking = true; // Spin attack baþlatýldý
         }
         _spinAttackInput = false;
+    }
+    public void OnSpinAttackEnd()
+    {
+        _isAttacking = false;
     }
 
     private void HandleBlock()

@@ -50,7 +50,7 @@ public class PlayerAttack : MonoBehaviour
 
         if (other.CompareTag("Enemy"))
         {
-            EnemyHealty enemyHealth = other.GetComponent<EnemyHealty>();
+            Enemy enemyHealth = other.GetComponent<Enemy>();
             if (enemyHealth != null)
             {
                 Debug.Log($"[PlayerAttack] EnemyHealty bulundu, {attackDamage} damage veriliyor.");
