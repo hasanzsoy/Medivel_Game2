@@ -80,6 +80,8 @@ public class PlayerController : MonoBehaviour
     private const float _threshold = 0.01f;
     private bool _hasAnimator;
 
+    // Kombo pencere kontrolü
+    private bool _canCombo = false;
 
     PlayerAttack _playerAttack;
 
@@ -139,12 +141,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (_isDead) return;
-
-        // Debug input every 60 frames to avoid spam
-        if (Time.frameCount % 60 == 0 && showDebugInfo)
-        {
-            // LogDebug($"Frame {Time.frameCount}: Move={_moveInput}, Sprint={_sprintInput}, Jump={_jumpInput}, InputWorking={_inputSystemWorking}");
-        }
 
         JumpAndGravity();
         GroundedCheck();
@@ -207,7 +203,7 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        //Move sýrasýnda saldýramaz
+        
         if (_isAttacking || _isBlocking) return;
 
         float targetSpeed = _moveInput.magnitude > 0.02f ?
@@ -307,32 +303,34 @@ public class PlayerController : MonoBehaviour
             StartAttack();
         }
 
+        // Kombo pencere açýkken ikinci saldýrý inputu alýnýr
+        if (_canCombo && _attackInput && _attackComboCounter == 1)
+        {
+            ContinueCombo();
+        }
+
         if (_spinAttackInput && grounded && !_isAttacking && !_isBlocking)
         {
             PerformSpinAttack();
         }
-
-        // _isAttacking sadece trigger verildikten sonra true olmalý
-        // Animasyon event ile _isAttacking = false yapýlmalý
     }
+
 
     private void StartAttack()
     {
-        if (_attackComboCounter == 0)
-        {
-            _attackComboCounter = 1;
-            _isAttacking = true; // Saldýrý baþlatýldý
-            if (_hasAnimator)
-                _animator.SetTrigger(_animIDAttack1);
-        }
-        else if (_attackComboCounter == 1)
-        {
-            _attackComboCounter = 2;
-            _isAttacking = true;
-            if (_hasAnimator)
-                _animator.SetTrigger(_animIDAttack2);
-        }
-        _attackInput = false;
+        _attackComboCounter = 1;
+        _isAttacking = true;
+        _canCombo = false;
+        if (_hasAnimator)
+            _animator.SetTrigger(_animIDAttack1);
+    }
+    private void ContinueCombo()
+    {
+        _attackComboCounter = 2;
+        _isAttacking = true;
+        _canCombo = false;
+        if (_hasAnimator)
+            _animator.SetTrigger(_animIDAttack2);
     }
 
     //Attack1 ve Attack2 animasyonlarýnýn sonuna Animation Event
@@ -340,27 +338,17 @@ public class PlayerController : MonoBehaviour
     {
         if (_attackComboCounter == 1)
         {
-            // Sadece kullanýcý ikinci kez týklarsa Attack2 tetiklenmeli
-            if (_attackInput)
-            {
-                _attackComboCounter = 2;
-                _isAttacking = false;
-                if (_hasAnimator)
-                    _animator.SetTrigger(_animIDAttack2);
-            }
-            else
-            {
-                // Kombo bitmez, bekler
-                _attackComboCounter = 0;
-                _isAttacking = false;
-            }
+            // Kombo penceresini aç, ikinci inputu bekle
+            _canCombo = true;
+            _isAttacking = false;
+            // kombo reset için timer eklenebilir
         }
         else if (_attackComboCounter == 2)
         {
             _attackComboCounter = 0;
+            _canCombo = false;
             _isAttacking = false;
         }
-        _attackInput = false; // inputu sýfýrla
     }
 
     private void PerformSpinAttack()
@@ -368,14 +356,15 @@ public class PlayerController : MonoBehaviour
         if (_hasAnimator)
         {
             _animator.SetTrigger(_animIDSpinAttack);
-            _isAttacking = true; // Spin attack baþlatýldý
+            _isAttacking = true;
         }
-        _spinAttackInput = false;
     }
     public void OnSpinAttackEnd()
     {
         _isAttacking = false;
     }
+
+
 
     private void HandleBlock()
     {
@@ -432,13 +421,16 @@ public class PlayerController : MonoBehaviour
         // LogDebug($"OnSprint called: {_sprintInput}, Phase: {context.phase}");
     }
 
-    // Unity Events Input Methods
+    // Input fonksiyonlarý - sadece burada input deðiþkenleri sýfýrlanýr
     public void OnAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
             _attackInput = true;
-            // LogDebug($"OnAttack called, Phase: {context.phase}");
+        }
+        else if (context.canceled)
+        {
+            _attackInput = false;
         }
     }
 
@@ -447,7 +439,10 @@ public class PlayerController : MonoBehaviour
         if (context.performed)
         {
             _spinAttackInput = true;
-            // LogDebug($"OnSpinAttack called, Phase: {context.phase}");
+        }
+        else if (context.canceled)
+        {
+            _spinAttackInput = false;
         }
     }
 
