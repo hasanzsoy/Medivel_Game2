@@ -6,19 +6,21 @@ using UnityEngine.UI;
 public class Enemy : MonoBehaviour
 {
     [Header("Health")]
-    [SerializeField] private int maxHealth = 100;
-    private int currentHealth;
-    public Image healthBarFill; // UI'deki saðlýk çubuðu
+    [SerializeField] private float maxHealth = 100;
+    private float currentHealth;
+    public Image healthBarFill; 
 
     [Header("AI")]
     public float detectionRange = 10f;
     public float attackRange = 2f;
     public float attackCooldown = 1.5f;
-    public int attackDamage = 20;
+    public float attackDamage = 20;
+    public float minMoveSpeed = 1.5f; 
+    public float maxMoveSpeed = 5.0f; 
 
     [Header("References")]
     public Transform playerTransform;
-    public Collider attackCollider; // Saldýrý sýrasýnda açýlýp kapanacak collider
+    public Collider attackCollider; 
 
     private Animator animator;
     private NavMeshAgent agent;
@@ -37,9 +39,17 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         currentHealth = maxHealth;
-        Debug.Log($"[Enemy] Baþlangýç saðlýðý: {currentHealth}");
         if (playerTransform == null && GameObject.FindGameObjectWithTag("Player") != null)
             playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        UpdateHealthBar();
+
+        // NavMeshAgent ve NavMesh durumu için debug
+        if (agent == null)
+            Debug.LogError("[Enemy] NavMeshAgent bulunamadý!");
+        else if (!agent.isOnNavMesh)
+            Debug.LogError("[Enemy] NavMeshAgent NavMesh üzerinde deðil!");
+        else
+            Debug.Log("[Enemy] NavMeshAgent NavMesh üzerinde ve hazýr.");
     }
 
     private void Update()
@@ -48,49 +58,62 @@ public class Enemy : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, playerTransform.position);
 
+        if (!agent.isOnNavMesh)
+        {
+            Debug.LogError("[Enemy] Update: NavMeshAgent NavMesh üzerinde deðil!");
+            return;
+        }
+
         if (distance <= detectionRange && distance > attackRange)
         {
-            // Takip et
+            // Hýz oranýný mesafeye göre hesapla (yakýnken min, uzakken max)
+            float t = Mathf.InverseLerp(attackRange, detectionRange, distance);
+            float targetSpeed = Mathf.Lerp(minMoveSpeed, maxMoveSpeed, t);
+
             agent.isStopped = false;
+            agent.speed = targetSpeed;
             agent.SetDestination(playerTransform.position);
 
-            animator.SetBool("isWalking", true);
-            animator.SetBool("isRunning", false);
-            animator.SetFloat("Speed", agent.velocity.magnitude);
+            Debug.Log($"[Enemy] Takip: Hedefe gidiliyor. Mesafe: {distance:F2}, Hýz: {targetSpeed:F2}");
+
+
+            // Animator Speed parametresi için normalize et (walk: 0.3, run: 1)
+            float normalizedSpeed = Mathf.InverseLerp(minMoveSpeed, maxMoveSpeed, agent.velocity.magnitude);
+            // Walk threshold: 0.3, Run: 0.3-1
+            animator.SetFloat("Speed", normalizedSpeed);
+
+            Debug.Log($"[Enemy] Agent velocity: {agent.velocity.magnitude:F2}, Animator Speed: {normalizedSpeed:F2}");
+
+
+
         }
         else if (distance <= attackRange)
         {
-            // Saldýrýya hazýrlan
             agent.isStopped = true;
-            animator.SetBool("isWalking", false);
-            animator.SetBool("isRunning", false);
             animator.SetFloat("Speed", 0f);
 
-            // Yüze dön
             Vector3 lookDir = (playerTransform.position - transform.position);
             lookDir.y = 0;
             if (lookDir != Vector3.zero)
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookDir), Time.deltaTime * 10f);
 
-            // Saldýrý
             if (Time.time - lastAttackTime > attackCooldown)
             {
                 animator.SetTrigger("Attack");
                 lastAttackTime = Time.time;
+                Debug.Log("[Enemy] Saldýrý tetiklendi.");
             }
         }
         else
         {
-            // Oyuncu menzilde deðil
             agent.isStopped = true;
-            animator.SetBool("isWalking", false);
-            animator.SetBool("isRunning", false);
             animator.SetFloat("Speed", 0f);
+            Debug.Log("[Enemy] Oyuncu menzilde deðil, idle.");
         }
     }
 
-    // Animator'da Attack animasyonunun uygun frame'ine event ekleyin:
-    // EnemyAttackEnable ve EnemyAttackDisable fonksiyonlarýný çaðýrýn.
+
+    // EnemyAttackEnable ve EnemyAttackDisable animasyon event
     public void EnemyAttackEnable()
     {
         if (attackCollider != null)
@@ -101,13 +124,12 @@ public class Enemy : MonoBehaviour
         if (attackCollider != null)
             attackCollider.enabled = false;
     }
-    // Saldýrý collider'ý baþka bir objeye çarptýðýnda hasar vermek için:
+   
     private void OnTriggerEnter(Collider other)
     {
         if (attackCollider != null && attackCollider.enabled && other.CompareTag("Player"))
         {
-            // Burada oyuncunun saðlýk scriptine eriþip hasar verebilirsiniz
-            // Örnek: other.GetComponent<PlayerHealth>()?.TakeDamage(attackDamage);
+            Debug.Log("[Enemy] Oyuncuya hasar verildi.");
             other.GetComponent<AnaKarakterCanSistemi>()?.CanAzalt(attackDamage);
         }
     }
@@ -117,7 +139,7 @@ public class Enemy : MonoBehaviour
     {
         if (isDead) return;
 
-        int oldHealth = currentHealth;
+        float oldHealth = currentHealth;
         currentHealth -= damage;
         currentHealth = Mathf.Max(currentHealth, 0);
 
@@ -134,28 +156,25 @@ public class Enemy : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        if (animator != null)
-            animator.SetTrigger("Die");
-
+        animator.SetBool("isDead", true);
         agent.isStopped = true;
         if (attackCollider != null)
             attackCollider.enabled = false;
 
-        StartCoroutine(WaitForAnimation(animator));
+        StartCoroutine(WaitForDeathAnimation());
+
         Debug.Log("[Enemy] Enemy öldü, obje yok ediliyor.");
     }
+    private IEnumerator WaitForDeathAnimation()
+    {
+        // Ölüm animasyonunun süresi kadar bekle, sonra objeyi yok et
+        yield return new WaitForSeconds(2f); // Animasyon süresine göre ayarlayýn
+        Destroy(gameObject);
+    }
+
     void UpdateHealthBar()
     {
-        float fillAmount = currentHealth / maxHealth;
-        healthBarFill.fillAmount = fillAmount;
-    }
-    private IEnumerator WaitForAnimation(Animator animator)
-    {
-        if (animator != null)
-        {
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            yield return new WaitForSeconds(stateInfo.length);
-        }
-        Destroy(gameObject);
+        if (healthBarFill != null)
+            healthBarFill.fillAmount = (float)currentHealth / maxHealth;
     }
 }
