@@ -30,6 +30,14 @@ public class PlayerController : MonoBehaviour
     public bool showDebugInfo = true;
     public bool forceDebugToScreen = false; // Inspector'da göstermek için
 
+
+
+    [Header("Sesler")]
+    public AudioClip swordSwingClip;
+    public AudioClip walkClip;
+    public AudioClip jumpClip;
+    public AudioClip deathClip;
+
     // Private variables
     private CharacterController _controller;
     private Animator _animator;
@@ -84,6 +92,7 @@ public class PlayerController : MonoBehaviour
     private bool _canCombo = false;
 
     PlayerAttack _playerAttack;
+
 
 
     void Awake()
@@ -556,4 +565,30 @@ public class PlayerController : MonoBehaviour
             new Vector3(transform.position.x, transform.position.y - groundedOffset, transform.position.z),
             groundedRadius);
     }
+
+    public void PlaySwordSwingSound()
+    {
+        if (AudioManager.Instance != null && swordSwingClip != null)
+            AudioManager.Instance.PlaySFX(swordSwingClip);
+    }
+
+    public void PlayWalkSound()
+    {
+        if (AudioManager.Instance != null && walkClip != null)
+            AudioManager.Instance.PlaySFX(walkClip);
+    }
+
+    public void PlayJumpSound()
+    {
+        if (AudioManager.Instance != null && jumpClip != null)
+            AudioManager.Instance.PlaySFX(jumpClip);
+    }
+
+    public void PlayDeathSound()
+    {
+        if (AudioManager.Instance != null && deathClip != null)
+            AudioManager.Instance.PlaySFX(deathClip);
+    }
+
+
 }

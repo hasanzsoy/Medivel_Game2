@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("Harita");
     }
 
     public void ContinueGame()
