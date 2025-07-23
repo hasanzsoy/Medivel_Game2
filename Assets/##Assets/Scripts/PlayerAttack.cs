@@ -24,6 +24,12 @@ public class PlayerAttack : MonoBehaviour
         {
             attackCollider.enabled = true;
             Debug.Log("[PlayerAttack] Attack collider ENABLED.");
+
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySword("sword"); // "sword" kütüphanedeki sesin adý
+            }
+
         }
         else
         {

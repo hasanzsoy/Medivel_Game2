@@ -569,25 +569,25 @@ public class PlayerController : MonoBehaviour
     public void PlaySwordSwingSound()
     {
         if (AudioManager.Instance != null && swordSwingClip != null)
-            AudioManager.Instance.PlaySFX(swordSwingClip);
+            AudioManager.Instance.PlaySFX("swordSwingClip");
     }
 
     public void PlayWalkSound()
     {
         if (AudioManager.Instance != null && walkClip != null)
-            AudioManager.Instance.PlaySFX(walkClip);
+            AudioManager.Instance.PlaySFX("walkClip");
     }
 
     public void PlayJumpSound()
     {
         if (AudioManager.Instance != null && jumpClip != null)
-            AudioManager.Instance.PlaySFX(jumpClip);
+            AudioManager.Instance.PlaySFX("jumpClip");
     }
 
     public void PlayDeathSound()
     {
         if (AudioManager.Instance != null && deathClip != null)
-            AudioManager.Instance.PlaySFX(deathClip);
+            AudioManager.Instance.PlaySFX("deathClip");
     }
 
 

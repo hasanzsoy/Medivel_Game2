@@ -1,26 +1,34 @@
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 using System.Collections.Generic;
-
-[System.Serializable]
-public class NamedAudioClip
-{
-    public string name;
-    public AudioClip clip;
-}
 
 public class AudioManager : MonoBehaviour
 {
+    [System.Serializable]
+    public class NamedAudioClip
+    {
+        public string name;
+        public AudioClip clip;
+    }
+
     public static AudioManager Instance;
+
+    [Header("Mixer ve Gruplar")]
+    public AudioMixer audioMixer;
+    public AudioMixerGroup musicGroup;
+    public AudioMixerGroup sfxGroup;
+    public AudioMixerGroup deathGroup;
+    public AudioMixerGroup footstepGroup;
+    public AudioMixerGroup jumpGroup;
+    public AudioMixerGroup swordGroup;
 
     [Header("Audio Sources")]
     public AudioSource musicSource;
     public AudioSource sfxSource;
-
-    [Header("UI Sliders")]
-    public Slider musicSlider;
-    public Slider sfxSlider;
+    public AudioSource deathSource;
+    public AudioSource footstepSource; 
+    public AudioSource jumpSource;
+    public AudioSource swordSource;
 
     [Header("Ses Kütüphanesi")]
     public NamedAudioClip[] musicClips;
@@ -29,8 +37,23 @@ public class AudioManager : MonoBehaviour
     private Dictionary<string, AudioClip> musicLibrary = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> sfxLibrary = new Dictionary<string, AudioClip>();
 
+    // Exposed parameter isimleri
+    private const string MasterVolumeParam = "MasterVolume";
+    private const string MusicVolumeParam = "MusicVolume";
+    private const string SFXVolumeParam = "SFXVolume";
+    private const string DeathVolumeParam = "DeathVolume";
+    private const string FootstepVolumeParam = "FootstepVolume";
+    private const string JumpVolumeParam = "JumpVolume";
+    private const string SwordVolumeParam = "SwordVolume";
+
+    // PlayerPrefs anahtarlarý
+    private const string MasterVolumeKey = "MasterVolume";
     private const string MusicVolumeKey = "MusicVolume";
-    private const string SfxVolumeKey = "SfxVolume";
+    private const string SFXVolumeKey = "SFXVolume";
+    private const string DeathVolumeKey = "DeathVolume";
+    private const string FootstepVolumeKey = "FootstepVolume";
+    private const string JumpVolumeKey = "JumpVolume";
+    private const string SwordVolumeKey = "SwordVolume";
 
     private void Awake()
     {
@@ -38,8 +61,8 @@ public class AudioManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded;
             BuildLibraries();
+            LoadVolumes();
         }
         else
         {
@@ -53,83 +76,58 @@ public class AudioManager : MonoBehaviour
         musicLibrary.Clear();
         sfxLibrary.Clear();
         foreach (var item in musicClips)
-        {
             if (item != null && item.clip != null && !string.IsNullOrEmpty(item.name))
                 musicLibrary[item.name] = item.clip;
-        }
         foreach (var item in sfxClips)
-        {
             if (item != null && item.clip != null && !string.IsNullOrEmpty(item.name))
                 sfxLibrary[item.name] = item.clip;
-        }
     }
 
-    private void Start()
-    {
-        LoadVolumes();
-        SetupSliders();
-    }
+    // --- SLIDER FONKSÝYONLARI ---
+    public void SetMasterVolume(float value) => SetVolume(MasterVolumeParam, MasterVolumeKey, value);
+    public void SetMusicVolume(float value) => SetVolume(MusicVolumeParam, MusicVolumeKey, value);
+    public void SetSFXVolume(float value) => SetVolume(SFXVolumeParam, SFXVolumeKey, value);
+    public void SetDeathVolume(float value) => SetVolume(DeathVolumeParam, DeathVolumeKey, value);
+    public void SetFootstepVolume(float value) => SetVolume(FootstepVolumeParam, FootstepVolumeKey, value);
+    public void SetSwordVolume(float value) => SetVolume(SwordVolumeParam, SwordVolumeKey, value);
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void SetVolume(string mixerParam, string prefsKey, float value)
     {
-        FindAudioSourcesAndSliders();
-        LoadVolumes();
-        SetupSliders();
-    }
-
-    private void FindAudioSourcesAndSliders()
-    {
-        musicSource = GameObject.FindWithTag("MusicSource")?.GetComponent<AudioSource>();
-        sfxSource = GameObject.FindWithTag("SFXSource")?.GetComponent<AudioSource>();
-        musicSlider = GameObject.FindWithTag("MusicSlider")?.GetComponent<Slider>();
-        sfxSlider = GameObject.FindWithTag("SFXSlider")?.GetComponent<Slider>();
+        // Unity mixer için volume genelde -80 ile 0 dB arasýdýr, slider 0-1 arasý olmalý
+        float dB = Mathf.Log10(Mathf.Clamp(value, 0.0001f, 1f)) * 20f;
+        audioMixer.SetFloat(mixerParam, dB);
+        PlayerPrefs.SetFloat(prefsKey, value);
+        PlayerPrefs.Save();
     }
 
     private void LoadVolumes()
     {
-        float musicVol = PlayerPrefs.GetFloat(MusicVolumeKey, 0.5f);
-        float sfxVol = PlayerPrefs.GetFloat(SfxVolumeKey, 0.5f);
-        if (musicSource != null) musicSource.volume = musicVol;
-        if (sfxSource != null) sfxSource.volume = sfxVol;
+        SetMasterVolume(PlayerPrefs.GetFloat(MasterVolumeKey, 1f));
+        SetMusicVolume(PlayerPrefs.GetFloat(MusicVolumeKey, 1f));
+        SetSFXVolume(PlayerPrefs.GetFloat(SFXVolumeKey, 1f));
+        SetDeathVolume(PlayerPrefs.GetFloat(DeathVolumeKey, 1f));
+        SetFootstepVolume(PlayerPrefs.GetFloat(FootstepVolumeKey, 1f));
+        SetSwordVolume(PlayerPrefs.GetFloat(SwordVolumeKey, 1f));
     }
 
-    private void SetupSliders()
+    // --- EVENT BAZLI SES OYNATMA ---
+
+    public void PlayMainMenuMusic()
     {
-        if (musicSlider != null)
-        {
-            musicSlider.value = musicSource != null ? musicSource.volume : PlayerPrefs.GetFloat(MusicVolumeKey, 0.5f);
-            musicSlider.onValueChanged.RemoveAllListeners();
-            musicSlider.onValueChanged.AddListener(SetMusicVolume);
-        }
-        if (sfxSlider != null)
-        {
-            sfxSlider.value = sfxSource != null ? sfxSource.volume : PlayerPrefs.GetFloat(SfxVolumeKey, 0.5f);
-            sfxSlider.onValueChanged.RemoveAllListeners();
-            sfxSlider.onValueChanged.AddListener(SetSfxVolume);
-        }
+        PlayMusic("mainmenu");
     }
 
-    public void SetMusicVolume(float value)
+    // Oyun müziði için
+    public void PlayGameMusic(string name)
     {
-        if (musicSource != null)
-            musicSource.volume = value;
-        PlayerPrefs.SetFloat(MusicVolumeKey, value);
-        PlayerPrefs.Save();
+        PlayMusic(name);
     }
 
-    public void SetSfxVolume(float value)
-    {
-        if (sfxSource != null)
-            sfxSource.volume = value;
-        PlayerPrefs.SetFloat(SfxVolumeKey, value);
-        PlayerPrefs.Save();
-    }
-
-    // Müzik çalmak için
     public void PlayMusic(string name, bool loop = true)
     {
         if (musicLibrary.TryGetValue(name, out var clip) && musicSource != null)
         {
+            musicSource.outputAudioMixerGroup = musicGroup;
             musicSource.clip = clip;
             musicSource.loop = loop;
             musicSource.Play();
@@ -140,12 +138,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // Efekt çalmak için
     public void PlaySFX(string name)
     {
         if (sfxLibrary.TryGetValue(name, out var clip) && sfxSource != null)
         {
-            sfxSource.PlayOneShot(clip, sfxSource.volume);
+            sfxSource.outputAudioMixerGroup = sfxGroup;
+            sfxSource.PlayOneShot(clip);
         }
         else
         {
@@ -153,10 +151,55 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // Doðrudan AudioClip ile de çalabilirsin
-    public void PlaySFX(AudioClip clip)
+    public void PlayDeath(string name)
     {
-        if (sfxSource != null && clip != null)
-            sfxSource.PlayOneShot(clip, sfxSource.volume);
+        if (sfxLibrary.TryGetValue(name, out var clip) && deathSource != null)
+        {
+            deathSource.outputAudioMixerGroup = deathGroup;
+            deathSource.PlayOneShot(clip);
+        }
+        else
+        {
+            Debug.LogWarning($"[AudioManager] Death SFX bulunamadý: {name}");
+        }
+    }
+
+    public void PlayFootstep(string name)
+    {
+        if (sfxLibrary.TryGetValue(name, out var clip) && footstepSource != null)
+        {
+            footstepSource.outputAudioMixerGroup = footstepGroup;
+            footstepSource.PlayOneShot(clip);
+        }
+        else
+        {
+            Debug.LogWarning($"[AudioManager] Footstep SFX bulunamadý: {name}");
+        }
+    }
+    public void PlayJump(string name)
+    {
+        if (sfxLibrary.TryGetValue(name, out var clip) && footstepSource != null)
+        {
+            jumpSource.outputAudioMixerGroup = jumpGroup;
+            jumpSource.PlayOneShot(clip);
+        }
+        else
+        {
+            Debug.LogWarning($"[AudioManager] Footstep SFX bulunamadý: {name}");
+        }
+    }
+
+    public void PlaySword(string name)
+    {
+        if (sfxLibrary.TryGetValue(name, out var clip) && swordSource != null)
+        {
+            swordSource.outputAudioMixerGroup = swordGroup;
+            swordSource.PlayOneShot(clip);
+        }
+        else
+        {
+            Debug.LogWarning($"[AudioManager] Sword SFX bulunamadý: {name}");
+        }
     }
 }
+

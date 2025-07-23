@@ -2,12 +2,13 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
+    [Header("Buttons")]
     public Button startButton;
     public Button continueButton;
     public Button optionsButton;
@@ -15,14 +16,31 @@ public class UIManager : MonoBehaviour
     public Button backButton;
     public Button exitButton;
 
+    [Header("Panel ve Ögeler")]
     public TextMeshProUGUI titleText;
-
     public GameObject settingsPanel;
     public GameObject creditsPanel;
-
     public GameObject exitPanel;
 
-    public Slider volumeSlider;
+    [Header("Sliders")]
+    public Slider musicSlider;
+    public Slider sfxSlider;
+    public Slider deathSlider;
+    public Slider footstepSlider;
+    public Slider swordSlider;
+    public Slider masterSlider;
+
+
+    void Start()
+    {
+        // Inspector’dan atanan slider referanslarý
+        musicSlider.onValueChanged.AddListener(AudioManager.Instance.SetMusicVolume);
+        sfxSlider.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
+        deathSlider.onValueChanged.AddListener(AudioManager.Instance.SetDeathVolume);
+        footstepSlider.onValueChanged.AddListener(AudioManager.Instance.SetFootstepVolume);
+        swordSlider.onValueChanged.AddListener(AudioManager.Instance.SetSwordVolume);
+        masterSlider.onValueChanged.AddListener(AudioManager.Instance.SetMasterVolume);
+    }
 
     public void StartGame()
     {
