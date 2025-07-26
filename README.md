@@ -109,12 +109,13 @@ Toplantı sırasında alınan ekran görüntüleri ve örnek mesajlaşmalar payl
 <p align="center">
   <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s21.jpeg"width="250" />
   <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s22.jpeg" width="250" />
-  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s28.jpeg" width="250" />
+  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s28.jpeg" width="250" /><br><br>
+
   <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s212.jpeg" width="250" />
   <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s213.jpeg" width="250" />
-  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s214.jpeg" width="250" />
+  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s214.jpeg" width="250" /><br><br>
+
   <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s215.jpeg" width="250" />
-  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s214.jpeg" width="250" />
 
 </p>
 
@@ -131,10 +132,13 @@ Toplantı sırasında alınan ekran görüntüleri ve örnek mesajlaşmalar payl
 <p align="center">
   <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s24.jpeg" height="330" hspace="10" style="width:80%;"/>
 <br>
+
   <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s25.jpeg" height="330" hspace="10" style="width:80%;" />
 <br>
+
   <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s26.jpeg" height="330" hspace="10" style="width:80%;" />
 <br>
+
   <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s27.jpeg" height="330" hspace="10" style="width:80%;" />
 </p>
 
