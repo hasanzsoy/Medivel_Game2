@@ -107,15 +107,24 @@ olarak öngörülmüştür.
 **Daily Scrum:** Takımımızın toplantıları, Slack ve WhatsApp üzerinden yapılmaya devam etti.  
 Toplantı sırasında alınan ekran görüntüleri ve örnek mesajlaşmalar paylaşılmıştır.
 <p align="center">
-  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s21.jpeg width="250" />
+  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s21.jpeg"width="250" />
   <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s22.jpeg" width="250" />
   <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s28.jpeg" width="250" />
+  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s212.jpeg" width="250" />
+  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s213.jpeg" width="250" />
+  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s214.jpeg" width="250" />
+  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s215.jpeg" width="250" />
+  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s214.jpeg" width="250" />
+
 </p>
 
 **Sprint Board Updates:**  Sprint süresince yapılan görev takibi ve ilerleme, **Trello** üzerinde oluşturulan sprint panosu üzerinden devam etmiştir.
 
 <p align="center">
   <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s23.jpg" style="width:80%; height:auto; max-height:100px;" />
+  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s210.jpeg" style="width:80%; height:auto; max-height:100px;" />
+  <img src="https://github.com/hasanzsoy/Medivel_Game2/blob/main/Sprint/s211.jpeg" style="width:80%; height:auto; max-height:100px;" />
+
 </p>
 
 **Screenshot:**
