@@ -27,9 +27,8 @@ public class PlayerAttack : MonoBehaviour
 
             if (AudioManager.Instance != null)
             {
-                AudioManager.Instance.PlaySword("sword"); // "sword" kütüphanedeki sesin adý
+                AudioManager.Instance.PlaySword("sword");
             }
-
         }
         else
         {
@@ -56,6 +55,7 @@ public class PlayerAttack : MonoBehaviour
 
         if (other.CompareTag("Enemy"))
         {
+            Debug.Log("[PlayerAttack] Enemy tagli objeye çarptý.");
             Enemy enemyHealth = other.GetComponent<Enemy>();
             if (enemyHealth != null)
             {
@@ -67,6 +67,23 @@ public class PlayerAttack : MonoBehaviour
                 Debug.LogWarning("[PlayerAttack] Enemy tagli objede EnemyHealty componenti yok!");
             }
         }
+        else if (other.CompareTag("EnemyVariant"))
+        {
+            Debug.Log("[PlayerAttack] EnemyVariant tagli objeye çarptý.");
+            EnemyVariantHealth enemyHealth = other.GetComponent<EnemyVariantHealth>();
+            if (enemyHealth != null)
+            {
+                Debug.Log($"[PlayerAttack] EnemyVariantHealty bulundu, {attackDamage} damage veriliyor.");
+                enemyHealth.TakeDamage(attackDamage);
+            }
+            else
+            {
+                Debug.LogWarning("[PlayerAttack] EnemyVariant tagli objede EnemyVariantHealty componenti yok!");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerAttack] OnTriggerEnter tetiklendi ama Enemy veya EnemyVariant tagli obje deðil!");
+        }
     }
 }
-

@@ -119,12 +119,20 @@ public class PlayerController : MonoBehaviour
     public void OnInteract(InputAction.CallbackContext context)
     {
 
-        
-            Debug.Log($"[PlayerController] OnInteract çaðrýldý. phase: {context.phase}, performed: {context.performed}, started: {context.started}, canceled: {context.canceled}, control: {context.control}, value: {context.ReadValueAsButton()}");
-            Debug.Log($"[PlayerController] OnInteract çaðrýldý. performed: {context.performed}, nearQuestBoard: {nearQuestBoard}, uiManager: {(uiManager != null)}");
-        if (context.performed && nearQuestBoard && uiManager != null)
+        if (!context.performed) return;
+        Debug.Log($"[PlayerController] OnInteract çaðrýldý. phase: {context.phase}, performed: {context.performed}, nearQuestBoard: {nearQuestBoard}, uiManager: {(uiManager != null)}");
+
+        if (uiManager == null) return;
+
+        // Eðer panel açýksa kapat, kapalýysa (ve yakýndaysa) aç
+        if (uiManager.questPanel != null && uiManager.questPanel.activeSelf)
         {
-            Debug.Log("[PlayerController] Koþullar saðlandý, OpenQuestPanel çaðrýlýyor.");
+            Debug.Log("[PlayerController] Quest panel açýk, kapatýlýyor.");
+            uiManager.CloseQuestPanel();
+        }
+        else if (nearQuestBoard)
+        {
+            Debug.Log("[PlayerController] Quest panel kapalý ve yakýnda, açýlýyor.");
             uiManager.OpenQuestPanel();
         }
         else

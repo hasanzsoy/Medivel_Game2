@@ -13,6 +13,10 @@ public class QuestManager : MonoBehaviour
         public string description;
         public int rewardGold;
         public bool isPlaceholder;
+
+        public int targetCount;     // Gereken öldürme sayýsý
+        public int currentCount;    // Oyuncunun ilerlemesi
+        public bool isCompleted => currentCount >= targetCount;
     }
 
     public List<QuestData> quests = new List<QuestData>();
@@ -91,7 +95,7 @@ public class QuestManager : MonoBehaviour
     void AcceptQuest(QuestData quest)
     {
         Debug.Log($"Görev kabul edildi: {quest.title}");
-        // Buraya accepted quest listesi ekleyebilirsin
+        ActiveQuestTracker.instance.SetActiveQuest(quest);
     }
 
 }
