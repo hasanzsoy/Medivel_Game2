@@ -93,6 +93,45 @@ public class PlayerController : MonoBehaviour
 
     PlayerAttack _playerAttack;
 
+    public InGameUIManager uiManager;
+    private bool nearQuestBoard = false;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"[PlayerController] OnTriggerEnter: {other.name}, Tag: {other.tag}");
+        if (other.CompareTag("QuestBoard"))
+        {
+            nearQuestBoard = true;
+            Debug.Log("[PlayerController] QuestBoard alanýna girildi, nearQuestBoard = true");
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Debug.Log($"[PlayerController] OnTriggerExit: {other.name}, Tag: {other.tag}");
+        if (other.CompareTag("QuestBoard"))
+        {
+            nearQuestBoard = false;
+            Debug.Log("[PlayerController] QuestBoard alanýndan çýkýldý, nearQuestBoard = false");
+        }
+    }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+
+        
+            Debug.Log($"[PlayerController] OnInteract çaðrýldý. phase: {context.phase}, performed: {context.performed}, started: {context.started}, canceled: {context.canceled}, control: {context.control}, value: {context.ReadValueAsButton()}");
+            Debug.Log($"[PlayerController] OnInteract çaðrýldý. performed: {context.performed}, nearQuestBoard: {nearQuestBoard}, uiManager: {(uiManager != null)}");
+        if (context.performed && nearQuestBoard && uiManager != null)
+        {
+            Debug.Log("[PlayerController] Koþullar saðlandý, OpenQuestPanel çaðrýlýyor.");
+            uiManager.OpenQuestPanel();
+        }
+        else
+        {
+            Debug.Log("[PlayerController] Koþullar saðlanmadý, panel açýlmadý.");
+        }
+    }
 
 
     void Awake()

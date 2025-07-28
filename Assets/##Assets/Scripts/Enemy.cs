@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour
     private float lastAttackTime = -999f;
     private bool isDead = false;
 
+    private bool wasInCombat = false;
 
     private void Awake()
     {
@@ -57,6 +58,14 @@ public class Enemy : MonoBehaviour
         if (isDead || playerTransform == null) return;
 
         float distance = Vector3.Distance(transform.position, playerTransform.position);
+        bool inCombat = (distance <= detectionRange);
+        if (inCombat != wasInCombat)
+        {
+            wasInCombat = inCombat;
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.SetCombatState(inCombat);
+        }
+
 
         if (!agent.isOnNavMesh)
         {

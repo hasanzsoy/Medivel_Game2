@@ -41,7 +41,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 7147ffda608d74840b873452b3fdcfa1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 529.5621
+      value: 511.27
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7147ffda608d74840b873452b3fdcfa1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -49,11 +49,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7147ffda608d74840b873452b3fdcfa1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 389.9478
+      value: 452.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7147ffda608d74840b873452b3fdcfa1, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7147ffda608d74840b873452b3fdcfa1, type: 3}
       propertyPath: m_LocalRotation.x
@@ -61,7 +61,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7147ffda608d74840b873452b3fdcfa1, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7147ffda608d74840b873452b3fdcfa1, type: 3}
       propertyPath: m_LocalRotation.z
@@ -73,7 +73,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7147ffda608d74840b873452b3fdcfa1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7147ffda608d74840b873452b3fdcfa1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -261,6 +261,11 @@ MonoBehaviour:
   attackComboResetTime: 0.5
   showDebugInfo: 1
   forceDebugToScreen: 0
+  swordSwingClip: {fileID: 8300000, guid: 01dfc9b3188d2f7438fc97c7e5bd42ae, type: 3}
+  walkClip: {fileID: 8300000, guid: ae472585a09dc5a40bad2e3f7735dffa, type: 3}
+  jumpClip: {fileID: 8300000, guid: 3919208f22ca60242881abb28fc9d51b, type: 3}
+  deathClip: {fileID: 8300000, guid: 35dda05d976ceaf4b93daa4903bcbe3f, type: 3}
+  uiManager: {fileID: 0}
 --- !u!114 &3146873287245211948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,7 +355,19 @@ MonoBehaviour:
     m_ActionId: 6c2ab1b8-8984-453a-af3d-a3c78ae1679a
     m_ActionName: Player/Attack
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5911637579093059433}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnInteract
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
     m_ActionId: 852140f2-7766-474d-8707-702459ba45f3
     m_ActionName: Player/Interact
   - m_PersistentCalls:
